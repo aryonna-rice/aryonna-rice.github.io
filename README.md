@@ -224,12 +224,50 @@ def filter_by_availability_and_category(self, availabilities: list[Tuple[str, st
     return clubs
 ```
 
-#### Link to project's repository: [
-](https://github.com/comp423-23s/final-project-final-c3)Please navigate to the backend folder to view any work I contributed to. 
+#### FastAPI Use
+Below is a code snippet of how I used FastAPI to fulfill HTTP requests for our application. 
 
-### Additional Achievements
-- [Insert any other notable achievements or outcomes]
+```python
+@api.post("/filter", response_model=list[Club], tags=['Club'])
+def filter(
+    body: list[list],
+    club_svc: ClubService = Depends()
+):
+    """Gets all clubs according to specified availability and categories."""
+    try:
+        return club_svc.filter_by_availability_and_category(availabilities=body[0], categories=body[1])
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
+```
 
+#### Potential Club to Club
+As described above, once a user submits a proposal to create a club, that club is not a real club until the request gets approved, thus introducing the need for a separate table. Below is the logic of making a potential club a real club. 
+
+```python
+def create_club(self, potential_club: PotentialClub) -> None:
+        """Approves the potential club request and adds it to the club table."""
+        user_entity = self._session.get(UserEntity, potential_club.founder_id)
+        # Generate a random club code
+        characters = string.ascii_letters + string.digits
+        club_code = ''.join(random.choice(characters) for i in range(8))
+        new_club: Club = Club(club_code= club_code, name=potential_club.name, description=potential_club.description)
+        user_entity.roles.append(self._session.get(RoleEntity, 2))
+        club_entity = ClubEntity.from_model(new_club)
+        self._session.add(club_entity)
+        club_entity.members.append(user_entity)
+        club_entity.leaders.append(user_entity)
+        for category in potential_club.categories:
+            category_entity = self._session.get(CategoryEntity, category.id)
+            club_entity.categories.append(category_entity)
+        potential_club_entity = self._session.get(PotentialClubEntity, potential_club.id)
+        for week_day_time_entity in potential_club_entity.meeting_times:
+            club_entity.meeting_times.append(week_day_time_entity)
+        stmt = delete(WeekDayTimeEntity).where(WeekDayTimeEntity.potential_club_id == potential_club.id)
+        self._session.delete(potential_club_entity)
+        self._session.commit()
+```
+
+#### Link to project's repository: (https://github.com/comp423-23s/final-project-final-c3)Please navigate to the backend folder to view any work I contributed to. 
 
 
 
