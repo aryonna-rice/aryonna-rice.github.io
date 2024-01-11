@@ -101,8 +101,7 @@ Name
    </td>
   </tr>
   <tr>
-   <td>[Club Entity](https://github.com/comp423-23s/final-project-final-c3/blob/stage/backend/entities/club_entity.py)
-   </td>
+   <td><a href="https://github.com/comp423-23s/final-project-final-c3/blob/stage/backend/entities/club_entity.py" style="color:blue;">Club Entity</a></td>
    <td>There are many organizations that might be a part of the UNC XL. Each one needs to have the following information: an id (int), a club_code (int) used by leaders of the club, a name(str), a description (str) for users, a list of members (List[UserEntity]), and a list of leaders (List[UserEntity])
    </td>
    <td>id, club_code, name, description, members, leaders
