@@ -86,7 +86,7 @@ Design a website for Computer Science clubs at UNC for their use.
 
 ### Visuals
 
-#### [Insert screenshot of the website's homepage here]
+#### ![Alt Text](https://github.com/comp423-23s/final-project-final-c3/blob/stage/docs/images/filtering_view.png)
 [Insert brief description or caption]
 
 #### Tables I Created
