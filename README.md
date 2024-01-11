@@ -224,8 +224,8 @@ def filter_by_availability_and_category(self, availabilities: list[Tuple[str, st
     return clubs
 ```
 
-#### [Insert link to the application's GitHub repository]
-[Insert additional context or details about the repository]
+#### Link to project's repository: [
+](https://github.com/comp423-23s/final-project-final-c3)Please navigate to the backend folder to view any work I contributed to. 
 
 ### Additional Achievements
 - [Insert any other notable achievements or outcomes]
