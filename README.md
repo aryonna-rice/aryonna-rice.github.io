@@ -267,7 +267,8 @@ def create_club(self, potential_club: PotentialClub) -> None:
         self._session.commit()
 ```
 
-#### Link to project's repository: (https://github.com/comp423-23s/final-project-final-c3)Please navigate to the backend folder to view any work I contributed to. 
+#### Link to project's repository: (https://github.com/comp423-23s/final-project-final-c3)
+Please navigate to the backend folder to view any work I contributed to. 
 
 
 
