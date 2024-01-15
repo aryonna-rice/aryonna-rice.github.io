@@ -152,7 +152,7 @@ Name
 </table>
 
 #### Club Filtering - Most Notable Feature
-The ability for a user to filter all clubs based on personal interests and availability was a feature I proposed the team implement. The idea behind this was to give users the ability to quickly search for clubs they are interested in. Below is the code snippet of how I implemented this feature and this is what filtering looked like for the user. 
+The ability for a user to filter all clubs based on personal interests and availability was a feature I proposed the team implement. The idea behind this was to give users the ability to quickly search for clubs they are interested in. Below is the code snippet of how I implemented this feature and <a href="https://github.com/comp423-23s/final-project-final-c3/blob/stage/docs/images/filtering_view.png" style="color:blue;">this</a> is what filtering looked like for the user. 
 
 ```python
 def filter_by_availability(self, availabilities: list[Tuple[str, str]]) -> list[int]:
