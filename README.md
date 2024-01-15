@@ -41,7 +41,7 @@ Prior to my undertaking of the project, there was no interim table for data to b
 - Dataframes with fewer than 1 million rows must all be inserted in under 60 seconds.
 
 ### Walk-through
-The data to be inserted into the temporary table is originally held in a Pandas dataframe and looks something like this. The data would look like this in the long format table in the MS SQL database and would look like this if saved in the JSON format table.
+The data to be inserted into the temporary table is originally held in a Pandas dataframe and looks something like <a href="https://github.com/aryonna-rice/aryonna-rice.github.io/blob/main/screenshots/Original.png" style="color:blue;">this</a>. The data would look like <a href="https://github.com/aryonna-rice/aryonna-rice.github.io/blob/main/screenshots/Long.png" style="color:blue;">this</a> in the long format table in the MS SQL database and would look like <a href="https://github.com/aryonna-rice/aryonna-rice.github.io/blob/main/screenshots/JSON.png" style="color:blue;">this</a> if saved in the JSON format table.
 
 ### Skills Learned
 - Setting up a connection with a database.
