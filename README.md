@@ -5,9 +5,9 @@
 2. [What I Do Best](#what-i-do-best)
 3. [Skills](#skills)
 4. [Projects](#projects)
-   4.1 [Saving Data to an MS SQL Database](#saving-data-to-an-ms-sql-database)
-   4.2 [Website Application for Computer Science Clubs at UNC](#website-application-for-computer-science-clubs-at-unc)
-   4.3 Generating Images from EEG Signals Using StableDiffusion
+   1. [Saving Data to an MS SQL Database](#saving-data-to-an-ms-sql-database)
+   2. [Website Application for Computer Science Clubs at UNC](#website-application-for-computer-science-clubs-at-unc)
+   3. Generating Images from EEG Signals Using StableDiffusion
 6. [Contact Information](#contact-information)
 
 ## About Me
