@@ -7,7 +7,7 @@
 4. [Projects](#projects)
    1. [Saving Data to an MS SQL Database](#saving-data-to-an-ms-sql-database)
    2. [Website Application for Computer Science Clubs at UNC](#website-application-for-computer-science-clubs-at-unc)
-   3. Generating Images from EEG Signals Using StableDiffusion
+   3. Dreamscape EEG Imaging
 6. [Contact Information](#contact-information)
 
 ## About Me
@@ -269,6 +269,132 @@ def create_club(self, potential_club: PotentialClub) -> None:
 
 #### Link to project's repository: (https://github.com/comp423-23s/final-project-final-c3)
 Please navigate to the backend folder to view any work I contributed to. 
+
+## Dreamscape EEG Imaging
+
+## Project Description
+"Dreamscape" was a collaborative project focused on transforming EEG brainwaves into images using the DreamDiffusion framework, which utilizes stable diffusion. The primary goal was to record brainwaves using the Muse SDK headset, process the data to generate images, store the data for research purposes, and display the generated images to users. My specific role in the project involved integrating the preexisting DreamDiffusion framework into our workflow.
+
+## Skills Learned and Used
+- Python programming
+- Machine learning with PyTorch
+- GPU utilization for model training
+- SLURM script creation and usage
+- Working with virtual machines (VMs), specifically Longleaf offered by UNC
+- Manipulating Google Cloud Platform (GCP) buckets
+- Setting up data storage and project structure on GCP
+- SSH into VMs and using VSCode with VMs
+
+## Achievements
+- Learned and applied machine learning concepts without prior experience in the field.
+- Established a data pipeline to record brainwaves, create images, and store data on GCP for research purposes.
+- Practiced using GPUs for faster model training.
+- Set up project infrastructure on GCP, including managing CSV files in GCP buckets.
+
+## Generating Images Script
+```python
+PATIENT_IMAGE_BUCKET = "patient-eeg-images"
+MODEL_PATH = "gs://eeg-checkpoint-files/pretrains-generation-checkpoint.pth"
+ROOT = "../dreamdiffusion/"
+
+def get_local_file_path(gcs_path: str) -> str:
+    _, bucket_name, object_name = gcs_path.split('/', 2)
+    local_temp_file = tempfile.NamedTemporaryFile(delete=False)
+    local_temp_file_path = local_temp_file.name
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(object_name)
+    blob.download_to_filename(local_temp_file_path)
+    return local_temp_file_path
+
+def delete_local_path(local_path: str) -> None:
+    os.remove(local_path)
+
+ 
+def generate_image(patient_id: int, eeg_signals_path: str):
+    """Creates 10 images based on the signals found at the eeg_signals_path."""
+    # Define the GCS path based on patient_id and datetime
+    datetime_str = datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
+    gcs_output_path = f"{PATIENT_IMAGE_BUCKET}/{patient_id}/{datetime_str}/"
+
+    # Load pre-trained model checkpoint
+    local_model_path = get_local_file_path(MODEL_PATH)
+    sd = torch.load(local_model_path, map_location='cpu')
+    config = sd['config']
+
+    # update paths
+    config.root_path = ROOT
+    local_eeg_signals_path = get_local_file_path(eeg_signals_path)
+    config.eeg_signals_path = local_eeg_signals_path
+    local_pretrain_mbm_path = get_local_file_path("gs://eeg-checkpoint-files/results-eeg_pretrain-28-11-2023-21-07-25-checkpoints-checkpoint.pth")
+    config.pretrain_mbm_path = local_pretrain_mbm_path
+    config.pretrain_gm_path = 'pretrains/'
+
+    print("Updated config:")
+    print(config.__dict__)
+    
+    print(f"Generated output path: {gcs_output_path}")
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    img_transform_test = transforms.Compose([
+        normalize, transforms.Resize((512, 512)), 
+        channel_last
+    ])
+    
+    dataset_test = EEGDataset(config.eeg_signals_path, img_transform_test, subject=4)
+    num_voxels = dataset_test.dataset.data_len
+    print(len(dataset_test))
+
+    # prepare pretrained mae 
+    pretrain_mbm_metafile = torch.load(config.pretrain_mbm_path, map_location='cpu')
+
+# Initialize Generative Model
+    generative_model = eLDM(pretrain_mbm_metafile, num_voxels,
+                            device=device, pretrain_root=config.pretrain_gm_path,
+                            ddim_steps=config.ddim_steps, global_pool=config.global_pool,
+                            use_time_cond=config.use_time_cond)
+    generative_model.model.load_state_dict(sd['model_state_dict'], strict=False)
+    print('Loaded generative model successfully')
+    state = sd['state']
+
+    # Generate Samples using new, unseen EEG data
+    grid, samples = generative_model.generate(dataset_test, config.num_samples,
+                                            config.ddim_steps, config.HW, limit=None, state=state,
+                                            output_path=gcs_output_path)
+
+        # Iterate through each sample and save it individually
+    for i, sample in enumerate(samples):
+        # Convert the sample to an image
+        img = Image.fromarray((255. * sample.cpu().numpy()).astype(np.uint8))
+
+        # Create a temporary local file to save the image
+        local_image_file = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+        local_image_file_path = local_image_file.name
+
+        # Save the individual image
+        img.save(local_image_file_path)
+
+        # Upload the local image file to GCS
+        client = storage.Client()
+        blob_name = f"sample_{i}.png"  # Adjust the blob name as needed
+        blob = client.bucket(PATIENT_IMAGE_BUCKET).blob(f"{patient_id}/{datetime_str}/{blob_name}")
+        blob.upload_from_filename(local_image_file_path)
+        # Delete the local image file
+        delete_local_path(local_image_file_path)
+
+    delete_local_path(local_image_file_path)
+    delete_local_path(local_eeg_signals_path)
+    delete_local_path(local_pretrain_mbm_path)
+    delete_local_path(local_model_path)
+```
+
+
+## Project Repositories
+- [Dreamscape Team Repository](https://github.com/aryonna-rice/comp-523-dreamscape)
+- [DreamDiffusion Framework Repository](https://github.com/bbaaii/DreamDiffusion)
+
+This project was a valuable learning experience, pushing my boundaries in machine learning and cloud computing.
+
 
 
 
