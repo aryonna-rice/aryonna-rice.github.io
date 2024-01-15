@@ -44,16 +44,19 @@ Prior to my undertaking of the project, there was no interim table for data to b
 The data to be inserted into the temporary table is originally held in a Pandas dataframe and looks something like <a href="https://github.com/aryonna-rice/aryonna-rice.github.io/blob/main/screenshots/Original.png" style="color:blue;">this</a>. The data would look like <a href="https://github.com/aryonna-rice/aryonna-rice.github.io/blob/main/screenshots/Long.png" style="color:blue;">this</a> in the long format table in the MS SQL database and would look like <a href="https://github.com/aryonna-rice/aryonna-rice.github.io/blob/main/screenshots/JSON.png" style="color:blue;">this</a> if saved in the JSON format table.
 
 ### Skills Learned
-- Setting up a connection with a database.
+- Setting up a connection with a database
+  - pyodbc
 - Pandas:
-  - to_sql, melt, pivot, merge, concat, etc.
+  - to_sql, melt, pivot, merge, concat, etc
+  - numpy
 - SQL:
-  - Writing raw queries.
-  - Injection attack-proof queries.
+  - Writing raw queries: (SELECT and DELETE WHERE, etc)
+  - Injection attack-proof queries
 - Python code:
-  - Created data-cleaning functions.
-  - Utilized regular expressions.
-  - Utilized concurrency (ThreadPoolExecutor) to insert data in batches.
+  - Created data-cleaning functions
+  - Utilized regular expressions
+    - re library
+  - Utilized concurrency (ThreadPoolExecutor) to insert data in batches
 
 ### Results
 #### Long Format
