@@ -388,6 +388,32 @@ def generate_image(patient_id: int, eeg_signals_path: str):
     delete_local_path(local_model_path)
 ```
 
+## GCP Work
+```python
+def save_tensor_to_gcs(eeg_tensors, remote_file_path: str) -> str:
+    # Save the tensor to a temporary file locally
+    local_temp_file = tempfile.NamedTemporaryFile(delete=False)
+    torch.save(eeg_tensors, local_temp_file.name)
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(PATIENT_EEG_SIGNALS_BUCKET)
+    blob = bucket.blob(remote_file_path)
+    blob.upload_from_file(local_temp_file.name)
+    os.remove(local_temp_file.name)
+    gcs_path = f"gs://{PATIENT_EEG_SIGNALS_BUCKET}/{remote_file_path}"
+    return gcs_path
+
+def clean_data(csv_file_path: str, patient_id: int) -> str:
+    """Preforms various transformations to fix data for model."""
+    content = read_csv_from_gcs(file_path=csv_file_path)
+    eeg_data = pd.read_csv(pd.compat.StringIO(content))
+    relevant_eeg_data = drop_irrelevants(eeg_data=eeg_data)
+    eeg_signals = relevant_eeg_data[relevant_eeg_data.columns].values
+    eeg_signals = standardize_eeg_data(eeg_signals=eeg_signals)
+    eeg_tensors = torch.tensor(eeg_signals, dtype=torch.float32)
+    remote_file_path = get_remote_file_path(patient_id=patient_id)
+    return save_tensor_to_gcs(eeg_tensors=eeg_tensors, remote_file_path=remote_file_path)
+```
+
 
 ## Project Repositories
 - [Dreamscape Team Repository](https://github.com/aryonna-rice/comp-523-dreamscape)
