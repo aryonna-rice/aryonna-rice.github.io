@@ -5,7 +5,10 @@
 2. [What I Do Best](#what-i-do-best)
 3. [Skills](#skills)
 4. [Projects](#projects)
-5. [Contact Information](#contact-information)
+   4.1 [Saving Data to an MS SQL Database](#saving-data-to-an-ms-sql-database)
+   4.2 [Website Application for Computer Science Clubs at UNC](#website-application-for-computer-science-clubs-at-unc)
+   4.3 Generating Images from EEG Signals Using StableDiffusion
+6. [Contact Information](#contact-information)
 
 ## About Me
 Hi! I'm Aryonna, a passionate senior computer science student at the University of North Carolina at Chapel Hill with a flair for backend development. My expertise lies in crafting robust solutions using Python and Java. Proficient in SQL ORM, SQL CORE, and MS SQL, I delve into the intricacies of databases with ease. I am a problem solver and love a good challenge!
