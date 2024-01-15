@@ -225,7 +225,7 @@ def filter_by_availability_and_category(self, availabilities: list[Tuple[str, st
 ```
 
 #### FastAPI Use
-Below is a code snippet of how I used FastAPI to fulfill HTTP requests for our application. 
+Below is a code snippet of one of the ways I used FastAPI to fulfill HTTP requests for our application. 
 
 ```python
 @api.post("/filter", response_model=list[Club], tags=['Club'])
@@ -247,9 +247,7 @@ As described above, once a user submits a proposal to create a club, that club i
 def create_club(self, potential_club: PotentialClub) -> None:
         """Approves the potential club request and adds it to the club table."""
         user_entity = self._session.get(UserEntity, potential_club.founder_id)
-        # Generate a random club code
-        characters = string.ascii_letters + string.digits
-        club_code = ''.join(random.choice(characters) for i in range(8))
+        club_code = generate_random_club_code()
         new_club: Club = Club(club_code= club_code, name=potential_club.name, description=potential_club.description)
         user_entity.roles.append(self._session.get(RoleEntity, 2))
         club_entity = ClubEntity.from_model(new_club)
